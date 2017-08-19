@@ -1,44 +1,29 @@
 (function () {
-  'use strict';
-  angular.module('NarrowItDownApp', [])
-  .controller('NarrowItDownController', NarrowItDownController)
-  .service('MenuSearchService', MenuSearchService)
-  .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
+  'use strict'
+  angular.module('NarrowItDownApp',[])
+  .controller('NarrowItDownController',NarrowItDownController);
 
-  NarrowItDownController.$inject = ['MenuSearchService'];
-  function NarrowItDownController(MenuSearchService) {
+  NarrowItDownController.$inject =['$http'];
+  function NarrowItDownController($http) {
     var menu = this;
 
-    menu.displayMenu = function (searchItem) {
+    menu.narrowResult = function () {
+      $http.get("https://davids-restaurant.herokuapp.com/menu_items.json")
+        .then(function (response) {
 
-      var promise = MenuSearchService.getMenuItms(searchItem);
-      promise.then(function (response) {
-        menu.menuItms = response.data;
-        // console.log(menu.menuItms);
-      })
-      .catch(function (error) {
-        console.log("Something went terribly wrong.");
-      });
+          var foundItems = [];
+          for (var i = 0; i < response.data.menu_items.length; i++) {
+
+            if (response.data.menu_items[i].description.indexOf(menu.searchTerm) !== -1) {
+                foundItems.push(response.data.menu_items[i]);
+            }
+          }
+          menu.found = foundItems;
+        });
+    };
+
+    menu.removeFromList = function (index) {
+      menu.found.splice(index, 1);
     };
   }
-
-  MenuSearchService.$inject = ['$http', 'ApiBasePath'];
-  function MenuSearchService($http, ApiBasePath) {
-    var service = this;
-
-    service.getMenuItms = function (searchTerm) {
-      console.log(searchTerm);
-      var response = $http({
-        method: "GET",
-      url: (ApiBasePath +"/menu_items.json")
-    });
-
-    var foundItems =[];
-    console.log(response.data);
-
-    return response;
-  };
-
-}
-
 })();
