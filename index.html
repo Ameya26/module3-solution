@@ -24,9 +24,8 @@
     <br/>
     <ol>
       <li ng-repeat="data in menu.found">"Short Name " {{ data.short_name}} "Description "{{data.description}}
-        <button ng-click="menu.removeFromList($index);" class="btn btn-primary">Don't want this one!</button>
+        <button ng-click="menu.removeFromList($index);" class="btn btn-danger">Don't want this one!</button>
       </li>
-
     </ol>
 
     <!-- found-items should be implemented as a component -->
