@@ -28,7 +28,6 @@
             }
           }
         });
-        console.log("got matched items" +foundItems);
         return foundItems;
     };
 }
@@ -38,7 +37,6 @@
     var menu = this;
 
     menu.narrowResult = function () {
-      console.log("inside narrowResult");
       menu.found = MenuSearchService.getMatchedMenuItems(menu.searchTerm);
     };
 
