@@ -3,12 +3,22 @@
   angular.module('NarrowItDownApp',[])
   .controller('NarrowItDownController',NarrowItDownController)
   .service('MenuSearchService',MenuSearchService)
-  .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
+  .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
+  .directive('foundItems', FoundItemsDirective);
+
+  FoundItemsDirective.$inject =[];
+  function FoundItemsDirective() {
+    var ddo ={
+      templateUrl: 'foundList.html'
+    };
+    return ddo;
+  }
 
   MenuSearchService.$inject=['$http', 'ApiBasePath'];
   function MenuSearchService($http, ApiBasePath) {
     var service = this;
     service.getMatchedMenuItems = function (searchTerm) {
+
       var foundItems = [];
       $http.get(ApiBasePath +"/menu_items.json")
         .then(function (response) {
@@ -18,6 +28,7 @@
             }
           }
         });
+        console.log("got matched items" +foundItems);
         return foundItems;
     };
 }
@@ -27,6 +38,7 @@
     var menu = this;
 
     menu.narrowResult = function () {
+      console.log("inside narrowResult");
       menu.found = MenuSearchService.getMatchedMenuItems(menu.searchTerm);
     };
 
